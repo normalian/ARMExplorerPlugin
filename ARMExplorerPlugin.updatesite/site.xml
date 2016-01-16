@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/ARMExplorerPlugin.features_1.0.0.201601162030.jar" id="ARMExplorerPlugin.features" version="1.0.0.201601162030"/>
+</site>
