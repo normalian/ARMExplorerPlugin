@@ -6,7 +6,7 @@ You can use this plugin for Azure Resource Manager Explorer as below.
 - Eclipse 4.5.1 or greater
 - JDK 1.7 or greater
 
-# How to install?
+# Install
 To install, point Eclipse's "Install New Software", and add site "http://normalianeclipseplugin.azurewebsites.net/armexplorerplugin/" as repository.
 
 # Dependency
