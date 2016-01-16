@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="AzureViewer"
+            id="ARMExplorerPlugin">
+      </category>
+      <view
+            name="ARM Explorer"
+            icon="icons/sample.gif"
+            category="ARMExplorerPlugin"
+            class="armexplorer.views.ARMExplorerView"
+            id="armexplorer.views.ARMExplorerView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="armexplorer.views.ARMExplorerView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+   <extension point="org.eclipse.ui.preferencePages">
+        <page class="armexplorer.preferences.ARMExplorerPreferencePage"
+              id="armexplorer.preference.page"
+              name="ARM Explorer"/>
+   </extension>
+</plugin>
