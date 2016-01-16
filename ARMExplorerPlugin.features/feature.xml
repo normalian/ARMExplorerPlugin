@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ARMExplorerPlugin.features"
+      label="ARMExplorerPlugin.features"
+      version="1.0.0.qualifier"
+      provider-name="normalian">
+
+   <description url="https://github.com/normalian/ARMExplorerPlugin/blob/master/README.md">
+      Please read description of this plugin from Github site
+   </description>
+
+   <copyright url="https://github.com/normalian/ARMExplorerPlugin/blob/master/README.md">
+      Copyright (C) 2016 normalian All Rights Reserved.
+   </copyright>
+
+   <license url="https://github.com/normalian/ARMExplorerPlugin/blob/master/LICENSE">
+      This plugin is under Eclipse Public License - v 1.0
+   </license>
+
+   <plugin
+         id="ARMExplorerPlugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
