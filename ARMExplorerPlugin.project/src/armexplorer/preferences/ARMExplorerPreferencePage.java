@@ -2,6 +2,13 @@ package armexplorer.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -9,13 +16,24 @@ import armexplorer.Activator;
 
 public class ARMExplorerPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	// https://azure.microsoft.com/documentation/articles/resource-group-authenticate-service-principal/
 	public ARMExplorerPreferencePage() {
 		super(GRID);
-		setDescription(
-				"Please fill your Microsoft Azure account info. If you aren't sure, please read \"https://azure.microsoft.com/documentation/articles/resource-group-authenticate-service-principal/\".");
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Link link = new Link(parent, SWT.NONE);
+		link.setText(ARMExplorerPreferenceConstants.PREFERENCE_ACCOUNT_INFO_MESSAGE);
+		link.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				// Open Azure Account info article with default Browser. 
+				Program.launch(event.text);
+			}
+		});
+		return super.createContents(parent);
+	};
 
 	@Override
 	public void init(IWorkbench workbench) {
