@@ -28,7 +28,7 @@ public class ARMExplorerPreferencePage extends FieldEditorPreferencePage impleme
 		link.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				// Open Azure Account info article with default Browser. 
+				// Open Azure Account info article with default Browser.
 				Program.launch(event.text);
 			}
 		});
@@ -45,8 +45,16 @@ public class ARMExplorerPreferencePage extends FieldEditorPreferencePage impleme
 				getFieldEditorParent()));
 		addField(new StringFieldEditor(ARMExplorerPreferenceConstants.TENANT_ID, "Tenant ID", getFieldEditorParent()));
 		addField(new StringFieldEditor(ARMExplorerPreferenceConstants.CLIENT_ID, "Client ID", getFieldEditorParent()));
+
+		// fill text control with *
 		addField(
-				new StringFieldEditor(ARMExplorerPreferenceConstants.CLIENT_KEY, "Client Key", getFieldEditorParent()));
+				new StringFieldEditor(ARMExplorerPreferenceConstants.CLIENT_KEY, "Client Key", getFieldEditorParent()) {
+					@Override
+					protected void doFillIntoGrid(Composite parent, int numColumns) {
+						super.doFillIntoGrid(parent, numColumns);
+						getTextControl().setEchoChar('*');
+					}
+				});
 	}
 
 }
