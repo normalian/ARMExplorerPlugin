@@ -97,26 +97,29 @@ public class ARMExplorerView extends ViewPart {
 		private void initialize() {
 			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-			String subscriptionId = store.getString(ARMExplorerPreferenceConstants.SUBSCRIPTION_ID);
-			String tenantId = store.getString(ARMExplorerPreferenceConstants.TENANT_ID);
-			String clientId = store.getString(ARMExplorerPreferenceConstants.CLIENT_ID);
-			String clientKey = store.getString(ARMExplorerPreferenceConstants.CLIENT_KEY);
+			// read stored account info
+			{
+				String subscriptionId = store.getString(ARMExplorerPreferenceConstants.SUBSCRIPTION_ID);
+				String tenantId = store.getString(ARMExplorerPreferenceConstants.TENANT_ID);
+				String clientId = store.getString(ARMExplorerPreferenceConstants.CLIENT_ID);
+				String clientKey = store.getString(ARMExplorerPreferenceConstants.CLIENT_KEY);
 
-			ILog log = Activator.getDefault().getLog();
-			log.log(new Status(IStatus.INFO, Activator.PLUGIN_ID,
-					String.format("load info subscriptionId=[%s], tenantId=[%s], clientId=[%s], clientKey=[%s]",
-							subscriptionId, tenantId, clientId, clientKey)));
+				ILog log = Activator.getDefault().getLog();
+				log.log(new Status(IStatus.INFO, Activator.PLUGIN_ID,
+						String.format("load info subscriptionId=[%s], tenantId=[%s], clientId=[%s], clientKey=[%s]",
+								subscriptionId, tenantId, clientId, clientKey)));
 
-			AzureConfigFactory.setSubscriptionId(subscriptionId);
-			AzureConfigFactory.setTenantId(tenantId);
-			AzureConfigFactory.setClientId(clientId);
-			AzureConfigFactory.setClientKey(clientKey);
+				AzureConfigFactory.setSubscriptionId(subscriptionId);
+				AzureConfigFactory.setTenantId(tenantId);
+				AzureConfigFactory.setClientId(clientId);
+				AzureConfigFactory.setClientKey(clientKey);
+			}
 
 			updateView();
 		}
 
 		private void updateView() {
-			// ログ出力
+			// output log
 			ILog log = Activator.getDefault().getLog();
 
 			// root node
@@ -128,7 +131,7 @@ public class ARMExplorerView extends ViewPart {
 				HashMap<String, List<GenericResourceExtended>> greListMap = null;
 				try {
 					greListMap = AzureResourceFactory.getResourcesAsMap();
-					// SubscriptionId の ノードを作成する
+					// create subscriptionId node
 					root = new TreeParent(AzureConfigFactory.getSubscriptionId());
 
 					for (Entry<String, List<GenericResourceExtended>> entry : greListMap.entrySet()) {
@@ -140,16 +143,16 @@ public class ARMExplorerView extends ViewPart {
 						root.addChild(p);
 					}
 				} catch (Exception e) {
-					// ログを確認
+					// output log
 					log.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "ARM SDK Error", e));
 					e.printStackTrace();
 
-					// SubscriptionId が空の場合
+					// when subscription id is broken
 					root = new TreeParent("Subscription Info is broken");
 				}
 
 			} else {
-				// SubscriptionId が空の場合
+				// when subscription id is empty
 				root = new TreeParent("Subscription Info isn't filled");
 			}
 
@@ -224,9 +227,13 @@ public class ARMExplorerView extends ViewPart {
 	}
 
 	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
+		// IActionBars bars = getViewSite().getActionBars();
+
+		// TODO : implement LocalPullDown
+		// fillLocalPullDown(bars.getMenuManager());
+
+		// TODO : implement localtoolbar
+		// fillLocalToolBar(bars.getToolBarManager());
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
@@ -275,7 +282,22 @@ public class ARMExplorerView extends ViewPart {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				showMessage("Double-click detected on " + obj.toString());
+
+				// if double clicked object isn't node, end this process
+				String message = "";
+				if (obj instanceof TreeParent) {
+					return;
+				} else if (obj instanceof TreeObject) {
+					TreeObject treeObject = (TreeObject) obj;
+					if (treeObject.getParent().getName().contains("Classic")) {
+						message = String.format("%s is classic type resource called as %s", treeObject.getName(),
+								treeObject.getParent().getName());
+					} else {
+						// TODO: showing resource type info
+						message = "Now under development showing resource info.";
+					}
+				}
+				showMessage(message);
 			}
 		};
 	}
