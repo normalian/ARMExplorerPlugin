@@ -12,7 +12,7 @@ To install, point Eclipse's "Install New Software", and add site "http://normali
 # Configuration
 
 You have to setup Azure account reading by [Authenticating a service principal with Azure Resource Manager](https://azure.microsoft.com/documentation/articles/resource-group-authenticate-service-principal). After setting up it, you should fili out ARM Explorer page in Eclipse preference.
-![Azure Explorer Configuration](https://github.com/normalian/ARMExplorerPlugin/blob/master/media/readme/ARMExplorerEclipsePluginConfiguration.PNG "Azure Explorer Configuration")
+![Azure Explorer Configuration](https://github.com/normalian/ARMExplorerPlugin/blob/master/media/readme/ARMExplorerEclipsePluginConfiguration.png "Azure Explorer Configuration")
 
 # Dependency
 
