@@ -1,5 +1,5 @@
 # ARM Explorer Plugin for Eclipse
-You can use this plugin for Azure Resource Manager Explorer as below.
+You can use this plugin for viewing Azure Resource Manager Explorer like below on Eclipse.
 ![Azure Explorer overview](https://github.com/normalian/ARMExplorerPlugin/blob/master/media/readme/ARMExplorerEclipsePluginOverview.PNG "Azure Explorer overview")
 
 # Requirement
