@@ -16,7 +16,7 @@ You have to setup Azure account reading by [Authenticating a service principal w
 
 # Dependency
 
-This plugin is depend on Azure ARM SDK of https://github.com/Azure/azure-sdk-for-java
+This plugin depends on Azure ARM SDK of https://github.com/Azure/azure-sdk-for-java
 
 ## Contributing
 
