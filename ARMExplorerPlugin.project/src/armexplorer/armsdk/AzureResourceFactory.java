@@ -7,6 +7,7 @@ import java.util.List;
 import com.microsoft.azure.management.resources.ResourceManagementClient;
 import com.microsoft.azure.management.resources.ResourceManagementService;
 import com.microsoft.azure.management.resources.models.GenericResourceExtended;
+import com.microsoft.azure.management.resources.models.ResourceGroupExtended;
 import com.microsoft.windowsazure.Configuration;
 
 public class AzureResourceFactory {
@@ -39,5 +40,13 @@ public class AzureResourceFactory {
 		}
 
 		return greListMap;
+	}
+	
+	// Get Resource Groups
+	public static List<ResourceGroupExtended> getResourceGroups() throws Exception {
+		Configuration config = AzureConfigFactory.createConfiguration();
+		ResourceManagementClient resourceManagementClient = ResourceManagementService.create(config);
+
+		return resourceManagementClient.getResourceGroupsOperations().list(null).getResourceGroups();
 	}
 }
