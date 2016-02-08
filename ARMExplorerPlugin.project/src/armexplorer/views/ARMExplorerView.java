@@ -37,6 +37,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 import com.microsoft.azure.management.resources.models.GenericResourceExtended;
+import com.microsoft.azure.management.resources.models.ResourceGroupExtended;
 
 import armexplorer.Activator;
 import armexplorer.armsdk.AzureConfigFactory;
@@ -93,7 +94,7 @@ public class ARMExplorerView extends ViewPart {
 			return false;
 		}
 
-		private void initialize() {
+		void initialize() {
 			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 			// read stored account info
@@ -117,21 +118,20 @@ public class ARMExplorerView extends ViewPart {
 			updateView();
 		}
 
-		private void updateView() {
+		void updateView() {
 			// output log
 			ILog log = Activator.getDefault().getLog();
 
-			// root node
-			TreeParent root = null;
-			if (StringUtils.isBlank(AzureConfigFactory.getSubscriptionId()) == false
-					&& StringUtils.isBlank(AzureConfigFactory.getTenantId()) == false
-					&& StringUtils.isBlank(AzureConfigFactory.getClientId()) == false
-					&& StringUtils.isBlank(AzureConfigFactory.getClientKey()) == false) {
-				HashMap<String, List<GenericResourceExtended>> greListMap = null;
-				try {
-					greListMap = AzureResourceFactory.getResourcesAsMap();
-					// create subscriptionId node
-					root = new TreeParent(AzureConfigFactory.getSubscriptionId());
+			// create subscriptionId node
+			TreeParent root = createTreeParent();
+
+			HashMap<String, List<GenericResourceExtended>> greListMap = null;
+			try {
+				greListMap = AzureResourceFactory.getResourcesAsMap();
+
+				// Provider Node
+				{
+					TreeParent resourceProviderNode = new TreeParent("Provider");
 
 					for (Entry<String, List<GenericResourceExtended>> entry : greListMap.entrySet()) {
 						TreeParent p = new TreeParent(entry.getKey());
@@ -139,25 +139,49 @@ public class ARMExplorerView extends ViewPart {
 							TreeObject to1 = new TreeObject(gre.getName());
 							p.addChild(to1);
 						}
-						root.addChild(p);
+						resourceProviderNode.addChild(p);
 					}
-				} catch (Exception e) {
-					// output log
-					log.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "ARM SDK Error", e));
-					e.printStackTrace();
-
-					// when subscription id is broken
-					root = new TreeParent("Subscription Info is broken");
+					root.addChild(resourceProviderNode);
 				}
 
-			} else {
-				// when subscription id is empty
-				root = new TreeParent("Subscription Info isn't filled");
+				// Resource Group NOde
+				{
+					TreeParent resourceGroupNode = new TreeParent("ResourceGroup");
+					for (ResourceGroupExtended resourceGroup : AzureResourceFactory.getResourceGroups()) {
+						TreeParent t = new TreeParent(resourceGroup.getName());
+						resourceGroupNode.addChild(t);
+					}
+					root.addChild(resourceGroupNode);
+				}
+
+			} catch (Exception e) {
+				// output log
+				log.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "ARM SDK Error", e));
+				e.printStackTrace();
+
+				// when subscription id is broken
+				root = new TreeParent("Subscription Info is broken or Azure site temporary unavailable");
 			}
 
 			this.invisibleRoot = new TreeParent("");
 			this.invisibleRoot.addChild(root);
 		}
+	}
+
+	TreeParent createTreeParent() {
+		TreeParent root = null;
+
+		if (StringUtils.isBlank(AzureConfigFactory.getSubscriptionId()) == false
+				&& StringUtils.isBlank(AzureConfigFactory.getTenantId()) == false
+				&& StringUtils.isBlank(AzureConfigFactory.getClientId()) == false
+				&& StringUtils.isBlank(AzureConfigFactory.getClientKey()) == false) {
+			root = new TreeParent(AzureConfigFactory.getSubscriptionId());
+		} else {
+			// when subscription id is empty
+			root = new TreeParent("Subscription Info isn't filled");
+		}
+
+		return root;
 	}
 
 	public ARMExplorerView() {
@@ -255,7 +279,7 @@ public class ARMExplorerView extends ViewPart {
 	}
 
 	private void makeActions() {
-		//TODO: development right click menu
+		// TODO: development right click menu
 		action = new Action() {
 			public void run() {
 				showMessage("Now under development showing resource info.");
